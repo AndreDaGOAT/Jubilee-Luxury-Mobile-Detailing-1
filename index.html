@@ -1,60 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobile Detailing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body { margin:0; font-family: Arial; }
-    header {
-      display:flex;
-      justify-content:space-between;
-      padding:15px;
-      background:#111;
-      color:white;
-    }
-    .btn {
-      background:#007BFF;
-      color:white;
-      padding:10px 15px;
-      text-decoration:none;
-      border-radius:5px;
-    }
-    .hero {
-      background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70');
-      background-size:cover;
-      color:white;
-      text-align:center;
-      padding:100px 20px;
-    }
-    section { padding:40px 20px; }
-  </style>
+<title>Elite Mobile Detailing</title>
+<meta name="description" content="Premium mobile detailing at your doorstep. Book fast and reliable service today.">
+
+<style>
+body { margin:0; font-family: Arial, sans-serif; line-height:1.6; }
+
+/* HEADER */
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  background:#111;
+  color:white;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.btn {
+  background:#007BFF;
+  color:white;
+  padding:12px 18px;
+  border-radius:5px;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+}
+
+.btn:hover { background:#0056b3; }
+
+/* HERO */
+.hero {
+  background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover no-repeat;
+  color:white;
+  text-align:center;
+  padding:120px 20px;
+}
+
+section {
+  max-width:900px;
+  margin:auto;
+  padding:50px 20px;
+}
+
+/* ADDRESS BOX */
+.address-box {
+  background:#f4f4f4;
+  padding:20px;
+  border-radius:8px;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+}
+
+/* FOOTER */
+footer {
+  background:#111;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+</style>
+
+<!-- Google Places API -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"></script>
+
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
-  <h2>1Elite Mobile Detailing</h2>
-  <div>
-    <a class="btn" href="#booking">Check Availability</a>
-  </div>
+  <h2>Elite Mobile Detailing</h2>
+  <a class="btn" href="#booking">Check Availability</a>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <h1>Reliable is the New Standard</h1>
   <p>Premium Mobile Detailing at Your Doorstep</p>
 </section>
 
-<!-- SERVICES -->
 <section>
   <h2>Service Categories</h2>
-  <p>Residential | Commercial</p>
+  <p><strong>Residential</strong> | <strong>Commercial</strong></p>
 </section>
 
-<!-- BOOKING PROCESS -->
 <section>
   <h2>How It Works</h2>
   <ol>
@@ -68,29 +106,74 @@
 <section id="booking">
   <h2>Check Availability</h2>
 
+  <div class="address-box">
+    <label><strong>Enter Your Service Address</strong></label>
+    <input id="address" type="text" placeholder="Start typing your address...">
+    <button class="btn" onclick="goToBooking()">Continue to Booking</button>
+  </div>
+
+  <br>
+
+  <!-- Calendly Embed -->
   <div class="calendly-inline-widget"
        data-url="https://calendly.com/aarmstrong1234"
        style="min-width:320px;height:700px;">
   </div>
-
 </section>
 
 <script src="https://assets.calendly.com/assets/external/widget.js"></script>
 
-<!-- CONTACT -->
+<!-- CONTACT FORM -->
 <section>
   <h2>Request a Quote</h2>
 
-  <iframe src="https://docs.google.com/forms/d/e/YOUR-FORM-ID/viewform?embedded=true"
-  width="100%" height="800"></iframe>
+  <iframe src="https://forms.gle/biEQ31fBqzQdDTaY9"
+          width="100%" height="800" frameborder="0">
+  </iframe>
 
 </section>
 
-<!-- FOOTER -->
-<footer style="background:#111;color:white;padding:20px;text-align:center;">
+<footer>
   <p>Phone: 615-348-7683</p>
-  <p>Email: your@email.com</p>
+  <p>Email: Contact@jubileeexecutivecarservice.com</p>
 </footer>
+
+<script>
+// Initialize Google Autocomplete safely
+function initAutocomplete() {
+  if (!window.google || !google.maps) return;
+
+  const input = document.getElementById("address");
+  const autocomplete = new google.maps.places.Autocomplete(input);
+
+  autocomplete.addListener("place_changed", function () {
+    const place = autocomplete.getPlace();
+    const address = place.formatted_address || "";
+    localStorage.setItem("customer_address", address);
+  });
+}
+
+// Wait for page + API
+window.addEventListener("load", () => {
+  setTimeout(initAutocomplete, 500);
+});
+
+// Booking button
+function goToBooking() {
+  const address = document.getElementById("address").value.trim();
+
+  if (!address) {
+    alert("Please enter your address first.");
+    return;
+  }
+
+  localStorage.setItem("customer_address", address);
+
+  document.querySelector(".calendly-inline-widget").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+</script>
 
 </body>
 </html>
