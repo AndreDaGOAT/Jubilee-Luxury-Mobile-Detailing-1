@@ -63,7 +63,7 @@ footer {
 </style>
 
 <!-- Google Places -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARZAA619g3JlruK77Lfm8vlopcR76vRGg&libraries=places"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"></script>
 
 </head>
 
@@ -90,7 +90,6 @@ footer {
 
   <br>
 
-  <!-- Calendly -->
   <div class="calendly-inline-widget"
        data-url="https://calendly.com/aarmstrong1234"
        style="min-width:320px;height:700px;">
@@ -99,7 +98,6 @@ footer {
 
 <script src="https://assets.calendly.com/assets/external/widget.js"></script>
 
-<!-- FORM -->
 <section>
   <h2>Request a Quote</h2>
 
@@ -109,7 +107,7 @@ footer {
     <input type="email" id="email" placeholder="Email" required>
     <input type="tel" id="phone" placeholder="Phone Number" required>
 
-    <!-- Hidden address field (FIX) -->
+    <!-- Hidden Address -->
     <input type="hidden" id="addressField">
 
     <select id="service" required>
@@ -133,7 +131,7 @@ footer {
 </footer>
 
 <script>
-// AUTOCOMPLETE FIX (KEY PART)
+// AUTOCOMPLETE
 function initAutocomplete() {
   if (!window.google || !google.maps) return;
 
@@ -144,13 +142,9 @@ function initAutocomplete() {
     const place = autocomplete.getPlace();
     const address = place.formatted_address || "";
 
-    // Fill visible field
     input.value = address;
-
-    // Fill hidden field (THIS FIXES YOUR ISSUE)
     document.getElementById("addressField").value = address;
 
-    // Backup storage
     localStorage.setItem("customer_address", address);
 
     console.log("Address captured:", address);
@@ -161,7 +155,7 @@ window.addEventListener("load", () => {
   setTimeout(initAutocomplete, 500);
 });
 
-// Scroll to Calendly
+// Scroll
 function scrollToBooking() {
   const address = document.getElementById("address").value.trim();
 
@@ -175,35 +169,41 @@ function scrollToBooking() {
   });
 }
 
-// FORM SUBMISSION → GOOGLE SHEETS
+// FORM SUBMIT (FIXED)
 document.getElementById("leadForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   const address =
     document.getElementById("addressField").value ||
     document.getElementById("address").value ||
-    localStorage.getItem("customer_address");
+    localStorage.getItem("customer_address") || "";
 
-  const formData = new FormData();
+  const url = "https://docs.google.com/forms/d/e/1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o/formResponse";
 
-  // 🔴 REPLACE THESE entry IDs WITH YOUR GOOGLE FORM IDs
-  formData.append("entry.1732750417", document.getElementById("name").value);
-  formData.append("entry.789337414", document.getElementById("email").value);
-  formData.append("entry.1845647830", document.getElementById("phone").value);
-  formData.append("addressField", address);
-  formData.append("entry.1320034990o", document.getElementById("service").value);
-  formData.append("entry.68684399_sentinel", document.getElementById("notes").value);
+  const data = new URLSearchParams();
 
-  fetch("https://docs.google.com/forms/d/e/1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o/formResponse", {
+  // 🔴 REPLACE THESE WITH REAL ENTRY IDs
+  data.append("entry.1732750417", document.getElementById("name").value);
+  data.append("entry.789337414", document.getElementById("email").value);
+  data.append("entry.1845647830", document.getElementById("phone").value);
+  data.append("entry.1320034990", address);
+  data.append("entry.611076595", document.getElementById("service").value);
+  data.append("entry.68684399_sentinel", document.getElementById("notes").value);
+
+  fetch(url, {
     method: "POST",
     mode: "no-cors",
-    body: formData
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: data.toString()
   });
 
-  // Redirect to booking
+  console.log("Submitted:", Object.fromEntries(data));
+
   setTimeout(() => {
     window.location.href = "https://calendly.com/aarmstrong1234";
-  }, 1000);
+  }, 1200);
 });
 </script>
 
