@@ -187,12 +187,12 @@ document.getElementById("leadForm").addEventListener("submit", function(e) {
   const formData = new FormData();
 
   // 🔴 REPLACE THESE entry IDs WITH YOUR GOOGLE FORM IDs
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", document.getElementById("name").value);
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", document.getElementById("email").value);
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", document.getElementById("phone").value);
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", address);
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", document.getElementById("service").value);
-  formData.append("1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o", document.getElementById("notes").value);
+  formData.append("entry.1732750417", document.getElementById("name").value);
+  formData.append("entry.789337414", document.getElementById("email").value);
+  formData.append("entry.1845647830", document.getElementById("phone").value);
+  formData.append("addressField", address);
+  formData.append("entry.1320034990o", document.getElementById("service").value);
+  formData.append("entry.68684399_sentinel", document.getElementById("notes").value);
 
   fetch("https://docs.google.com/forms/d/e/1OUeiO_IystoCyNgGW4lSJmVASbh1D6-PEEo81GkoH2o/formResponse", {
     method: "POST",
